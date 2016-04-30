@@ -31,7 +31,17 @@ class LNDynamic:
 		data = {'req': request_raw, 'signature': signature, 'nonce': nonce}
 		content = requests.post(url, data=data).json()
 		# content is now a dictionary, NOT a string
+		if 'success' not in content:
+			raise APIException('Server gave invalid repsonse (missing success key)')
+		elif content['success'] != 'yes':
+			if 'error' in content:
+				raise APIException('API error: ' + content['error'])
+			else:
+				raise APIException('Unknown API error')
 		return content
 
 class LNDAPIException(Exception):
+	pass
+
+class APIException(Exception):
 	pass
