@@ -1,0 +1,60 @@
+---
+
+- hosts: all
+  become: true
+  remote_user: centos
+  become_method: sudo
+  become_user: root
+  tasks:
+    - name: Install require packages
+      become: true
+      become_user: root
+      yum: name={{item}} state=present update_cache=yes
+      with_items:
+        - wget
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+    - name: set git rpm package
+      yum:
+        name: https://centos7.iuscommunity.org/ius-release.rpm
+        state: present
+    - name:  install recent version of git
+      yum: name=git2u-all state=present update_cache=yes
+    - name: Add docker repo
+      command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    - name: Add docker package
+      yum: name=docker-ce state=present update_cache=yes
+    - name: set docker daemon
+      command: systemctl enable docker
+    - name: start docker daemon
+      command: systemctl start docker
+    - name: set default user in docker group
+      command: usermod -aG docker centos
+    - name: Install epel
+      yum: name=epel-release state=present update_cache=yes
+    - name:  install monitoring
+      yum: name={{item}} state=present update_cache=yes
+      with_items:
+        - htop
+        - iotop
+        - iftop
+    - name: install python pip
+      yum: name=python-pip state=present update_cache=yes
+    - name: Install docker compose
+      command:  pip install docker-compose
+    - name: Install pyopenssl and other
+      command:  pip install pyopenssl ndg-httpsclient pyasn1
+    - name: Update urllib3
+      command: pip install -U urllib3
+    - name: Add the user 'hme' with a specific uid and a primary group of 'wheel'
+      user:
+        name: hme
+        comment: hme
+        password: $1$xyz$pOTDn5Om29OwnDp5Tz2D/0
+        uid: 1002
+        group: wheel
+    - name: Change password
+      user:
+        name: centos
+        password: $1$xyz$pOTDn5Om29OwnDp5Tz2D/0
