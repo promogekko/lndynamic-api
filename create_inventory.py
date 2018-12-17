@@ -1,5 +1,5 @@
 from lndynamic import LNDynamic
-
+import natsort
 with open(r"/home/hme/commands.txt") as hpass:
     lines = hpass.readlines()
 
@@ -9,6 +9,7 @@ results = api.request('vm', 'list')
 f= open(r"/home/hme/inventory_lunanode" ,"w+")
 hfile= open(r"/home/hme/user_list" ,"w+")
 val = results.get("vms")
+user_dic={}
 print len(val)
 for i  in range(0,len(val)):
     flag = 0
@@ -37,9 +38,10 @@ for i  in range(0,len(val)):
                 print (str(ip),str(a[1]),str(a[3]))
                 gt=str(a[1])[:-1]
                 line = "{}  ansible_ssh_user={}  ansible_ssh_pass={}\n".format(str(ip),str(gt),str(a[3]))
-                user_line="{} \t {} \t centos \t lawn-vex\n".format(user,str(ip))
+                #user_line="{} \t {} \t centos \t lawn-vex\n".format(user,str(ip))
                 f.write(line)
-                hfile.write(user_line)
+                user_dic[str(user)]=str(ip)
+                #hfile.write(user_line)
             except KeyError as error:
                 pass
             #for v in range (0,len(st)):
@@ -48,4 +50,12 @@ for i  in range(0,len(val)):
             #            print( "user = ",y)
 
 f.close()
+#print (user_dic)
+list_user =user_dic.keys();
+natural= natsort.natsorted(list_user)
+#print natural
+for vts in range(0,len(natural)):
+    myip=user_dic[natural[vts]]
+    user_line="{} \t {} \t centos \t lawn-vex\n".format(natural[vts],myip)
+    hfile.write(user_line)
 hfile.close()
