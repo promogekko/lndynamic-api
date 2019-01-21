@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from lndynamic import LNDynamic
 import natsort
 with open(r"/home/hme/commands.txt") as hpass:
@@ -15,7 +17,7 @@ for i  in range(0,len(val)):
     flag = 0
     for key, value in val[i].items():
         if key == 'name':
-            if "user" not in value:
+            if "stjo" not in value:
                 break
             print('name=',value)
             user= value
