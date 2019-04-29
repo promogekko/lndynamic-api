@@ -19,8 +19,10 @@ for i  in range(0,len(val)):
             print('ip=',value)
         if key == 'plan_id':
             print('plan_id=',value)
-#api.request("vm","create",{'hostname':'user2','plan_id' : 4 ,'region' :'roubaix', 'set_password': 'lawn-vex', 'image_id': 85048,'storage': 70})
-#results = api.request('vm', 'info', {'vm_id': '08285781-c5b3-451c-a713-3df847ffdbc1'})
+api.request("vm","create",{'hostname':'user2','plan_id' : 89 ,'region' :'toronto', 'set_password': 'lawn-vex', 'image_id': 148497})
+#results = api.request('vm', 'info', {'vm_id': '51ed49a3-1332-4fdb-82d5-5facae99c6d1'})
+#print ("-----------------------")
+#print (results)
 
-results = api.request('image', 'list')
-print(results)
+#results = api.request('image', 'list')
+#print(results)
